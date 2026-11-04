@@ -1,0 +1,360 @@
+{
+  "info": {
+    "name": "MLBB Shop - Sakti (Setup, Middleware, Hero)",
+    "description": "Bagian Sakti saja: testcase resmi 01-08 dan 28, ditambah assertion Postman. Jalankan seed ulang sebelum collection; seed menghapus semua data. Fitur 3-7 dikerjakan anggota lain.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "health"
+          ]
+        },
+        "description": "GET /health\nHasil yang benar: 200"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(true); pm.expect(body.message).to.be.a(\"string\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02. Daftar Hero Role Marksman",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/heroes?role=MARKSMAN&limit=5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "heroes"
+          ],
+          "query": [
+            {
+              "key": "role",
+              "value": "MARKSMAN"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        },
+        "description": "GET /api/heroes?role=MARKSMAN&limit=5\nHasil yang benar: 200, totalItems 20"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(true); pm.expect(body.message).to.be.a(\"string\"); });",
+              "pm.test(\"Filtered total\", function () { pm.expect(pm.response.json().metadata.totalItems).to.eql(20); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03. Cari Hero 'la'",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/heroes?search=la",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "heroes"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "la"
+            }
+          ]
+        },
+        "description": "GET /api/heroes?search=la\nHasil yang benar: 200, totalItems 10"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(true); pm.expect(body.message).to.be.a(\"string\"); });",
+              "pm.test(\"Filtered total\", function () { pm.expect(pm.response.json().metadata.totalItems).to.eql(10); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04. Detail Hero Layla",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/heroes/18",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "heroes",
+            "18"
+          ]
+        },
+        "description": "GET /api/heroes/18\nHasil yang benar: 200, Layla dengan 11 skin"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(true); pm.expect(body.message).to.be.a(\"string\"); });",
+              "pm.test(\"Layla with 11 skins\", function () { const data = pm.response.json().data; pm.expect(data.name).to.eql(\"Layla\"); pm.expect(data.skins).to.have.lengthOf(11); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05. Detail Hero Tidak Ada",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/heroes/999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "heroes",
+            "999"
+          ]
+        },
+        "description": "GET /api/heroes/999\nHasil yang benar: 404"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(404); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(false); pm.expect(body.message).to.be.a(\"string\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06. Tambah Hero Collie",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/heroes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "heroes"
+          ]
+        },
+        "description": "POST /api/heroes\nHasil yang benar: 201, id 134",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Collie\",\n  \"role\": \"MAGE\",\n  \"lane\": \"MID\",\n  \"releaseYear\": 2026,\n  \"priceBP\": 32000,\n  \"priceDiamond\": 599\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(true); pm.expect(body.message).to.be.a(\"string\"); });",
+              "pm.test(\"Collie id 134\", function () { pm.expect(pm.response.json().data.id).to.eql(134); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07. Tambah Hero Nama Sudah Ada",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/heroes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "heroes"
+          ]
+        },
+        "description": "POST /api/heroes\nHasil yang benar: 409",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Collie\",\n  \"role\": \"MAGE\",\n  \"lane\": \"MID\",\n  \"releaseYear\": 2026,\n  \"priceBP\": 32000,\n  \"priceDiamond\": 599\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(409); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(false); pm.expect(body.message).to.be.a(\"string\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08. Tambah Hero Data Kurang",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/heroes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "heroes"
+          ]
+        },
+        "description": "POST /api/heroes\nHasil yang benar: 400",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Kaiden\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(400); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(false); pm.expect(body.message).to.be.a(\"string\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "28. Endpoint Tidak Ada",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/api/ngawur",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "ngawur"
+          ]
+        },
+        "description": "GET /api/ngawur\nHasil yang benar: 404"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status\", function () { pm.response.to.have.status(404); });",
+              "pm.test(\"Response envelope\", function () { const body = pm.response.json(); pm.expect(body.status).to.eql(false); pm.expect(body.message).to.be.a(\"string\"); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
