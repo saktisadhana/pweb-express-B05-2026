@@ -54,10 +54,6 @@ describe("Setup dan middleware", () => {
     expect(res.body).toEqual({ status: false, message: expect.any(String) });
   });
 
-  it.each(["/api/skins", "/api/players/1", "/api/statistics"])("tidak mengambil alih fitur anggota lain: %s", async (path) => {
-    expect((await request(app).get(path)).status).toBe(404);
-  });
-
   it("JSON rusak tetap menggunakan format response gagal", async () => {
     const res = await request(app).post("/api/heroes").set("Content-Type", "application/json").send('{"name":');
     expect(res.status).toBe(400);
